@@ -3,17 +3,16 @@ import { LocationMarkerIcon, MenuIcon, SearchIcon, ShoppingCartIcon } from '@her
 
 const Header = () => {
   return (
-    <header className="sticky">
+    <header className="sticky top-0 z-50">
       {/* top nav*/}
       <div className="flex items-center bg-amazon_blue  py-2">
-        <div className=" relative flex flex-grow pt-2 mr-2 items-center sm:flex-grow-0">
+        <div className=" relative flex flex-grow pt-2  items-center sm:flex-grow-0">
           <Image
             className="cursor-pointer"
             src={'https://links.papareact.com/f90'}
             height={35}
             width={140}
             objectFit="contain" />
-          <span className="text-white absolute top-2 right-0">.in</span>
         </div>
         <div className="hidden lg:inline-flex text-white text-sm m-1 mr-4 whitespace-nowrap items-end link space-x-2">
           <div>

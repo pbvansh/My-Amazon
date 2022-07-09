@@ -1,11 +1,12 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Banner from '../components/Banner'
 import Header from '../components/Header'
+import ProductsFeed from '../components/productsFeed'
+import dynamic from 'next/dynamic'
 
-export default function Home() {
+export default function Home({products}) {
   return (
-   <div>
+   <div className='bg-gray-100'>
     <Head>
       <title>
         My-Amazon
@@ -17,7 +18,21 @@ export default function Home() {
       {/* Banner */}
       <Banner/>
       {/* Product Feed */}
+      <ProductsFeed products={products}/>
      </main>
    </div>
   )
+}
+
+export async function getServerSideProps(context){
+
+  const products = await fetch('https://fakestoreapi.com/products').then(
+    (res)=>res.json()
+  ).catch((err)=>console.log(err))
+
+  return{
+    props:{
+        products
+    }
+  }
 }
