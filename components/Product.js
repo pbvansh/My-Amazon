@@ -2,18 +2,27 @@ import { StarIcon } from "@heroicons/react/solid"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import Currency from 'react-currency-formatter'
+import { useRecoilState, useRecoilValue } from "recoil";
+import { basketItemAtom, basketItemCountAtom } from "../atoms/basketAtom";
 
 
 
 const MIN_RAT = 1;
 const MAX_RAT = 5;
+
 const Product = ({ id, title, price, description, category, image, rating }) => {
 
     const [rat] = useState(
         Math.floor(Math.random() * (MAX_RAT - MIN_RAT + 1) + MIN_RAT)
     )
     const [hasPrime] = useState(Math.random() > 0.5);
+    const [items,setItems] = useRecoilState(basketItemAtom)
 
+    function incCount(){
+        setItems([...items,{
+            id, title, price, description, category, image,rat,hasPrime
+        }])
+    }
 
     return (
         <div key={id} className="relative flex flex-col p-10 bg-white m-5 z-20">
@@ -46,7 +55,7 @@ const Product = ({ id, title, price, description, category, image, rating }) => 
                 )
             }
 
-            <button className="btn">Add to Basket</button>
+            <button onClick={incCount} className="btn">Add to Basket</button>
         </div>
     )
 }

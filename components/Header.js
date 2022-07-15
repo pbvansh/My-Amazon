@@ -1,13 +1,23 @@
 import Image from "next/image"
 import { LocationMarkerIcon, MenuIcon, SearchIcon, ShoppingCartIcon } from '@heroicons/react/outline'
+import { useSession, signIn, signOut } from "next-auth/react"
+import { useRouter } from "next/router"
+import { useRecoilValue } from "recoil"
+import { basketItemAtom, basketItemCountAtom } from "../atoms/basketAtom"
 
 const Header = () => {
+
+  const {data:session} = useSession();
+  const count = useRecoilValue(basketItemAtom)
+  const route = useRouter()
+
   return (
     <header className="sticky top-0 z-50">
       {/* top nav*/}
       <div className="flex items-center bg-amazon_blue  py-2">
-        <div className=" relative flex flex-grow pt-2  items-center sm:flex-grow-0">
+        <div  className=" relative flex flex-grow pt-2  items-center sm:flex-grow-0">
           <Image
+            onClick={()=>route.push('/')}
             className="cursor-pointer"
             src={'https://links.papareact.com/f90'}
             height={35}
@@ -37,8 +47,8 @@ const Header = () => {
         </div>
 
         <div className="text-white text-sm flex space-x-6 whitespace-nowrap mx-4 items-center">
-          <div className="link">
-            <p> Hello pratik vansh</p>
+          <div onClick={!session ? signIn : signOut} className="link">
+            <p>Hello { session ? ` ${session.user.name}` : 'Sign In'}</p>
             <p className="font-bold md:text-sm"> Account & Lists</p>
           </div>
           <div className="link">
@@ -47,9 +57,9 @@ const Header = () => {
             </p>
             <p className="font-bold md:text-sm">& Orders</p>
           </div >
-          <div className=" link flex items-center relative">
+          <div onClick={()=>route.push('/basket')}  className=" link flex items-center relative">
             <span className="absolute flex top-0 -right-1 lg:right-10 h-4 w-4
-              bg-yellow-400 items-center justify-center rounded-full font-bold text-black ">0</span>
+              bg-yellow-400 items-center justify-center rounded-full font-bold text-black ">{count.length}</span>
             <ShoppingCartIcon className="h-10" />
             <p className="hidden lg:inline font-bold md:text-sm mt-3">Basket</p>
           </div>
