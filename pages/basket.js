@@ -3,11 +3,13 @@ import Header from "../components/Header"
 import { useRecoilValue } from 'recoil'
 import { basketItemAtom } from "../atoms/basketAtom"
 import BasketItem from "../components/BasketItem"
+import { useSession } from "next-auth/react"
 
 
 const Basket = () => {
 
   const Items = useRecoilValue(basketItemAtom)
+  const { data: session } = useSession()
 
   return (
     <div className="bg-gray-100">
@@ -34,6 +36,7 @@ const Basket = () => {
               Items.map((item, i) => (
                 <BasketItem
                   key={i}
+                  idx={i}
                   id={item.id}
                   title={item.title}
                   price={item.price}
@@ -42,6 +45,7 @@ const Basket = () => {
                   image={item.image}
                   rat={item.rat}
                   hasPrime={item.hasPrime}
+                  qty={item.quantity}
                 />
               ))
             }
@@ -49,7 +53,25 @@ const Basket = () => {
         </div>
 
         {/* right side */}
-        <div></div>
+        <div>
+          {
+
+            Items.length > 0 && (
+              <>
+                <h1 className="text-lg font-semibold whitespace-nowrap">
+                  Subtotal ({Items.length} item):
+                  <span className="font-bold">1000</span>
+                </h1>
+                {/*               <input type='checkbox'>This order contains a gift</input> */}
+                <button 
+                 disabled = {!session}
+                 className={`btn mt-2 ${!session &&'from-gray-300 to-gray-500 border-gray-200 text-gray-300 cursor-not-allowed'}`}>
+                  {!session ? 'Sign in to Checkout' : 'Proceed to Buy'}
+                </button>
+              </>
+            )
+          }
+        </div>
       </main>
     </div>
   )

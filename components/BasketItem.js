@@ -4,16 +4,21 @@ import Currency from 'react-currency-formatter';
 import {useRecoilState} from 'recoil'
 import { basketItemAtom } from "../atoms/basketAtom";
 
-const BasketItem = ({id, title, price, description, category, image, rat,hasPrime}) => {
+const BasketItem = ({idx,id, title, price, description, category, image, rat,hasPrime,qty}) => {
 
     const [items,setItems] = useRecoilState(basketItemAtom)
-
+    console.log(items.quantity);
     const addItem =() =>{
-        setItems([...items,{id, title, price, description, category, image, rat,hasPrime}])
+        const index = items.findIndex((item) => item.id == id)
+            let newItems = [...items];
+            let obj = {...newItems[index]};
+            obj.quantity++;
+            newItems[index] = obj
+            setItems(newItems);
     }
     
     const removeItem = () =>{
-        const index = items.findIndex((item)=>item.id === id )
+        const index = items.findIndex((item,i)=>i === idx)
         let newItem =[...items];
         if(index >=0){
             newItem.splice(index,1)
@@ -21,6 +26,23 @@ const BasketItem = ({id, title, price, description, category, image, rat,hasPrim
             console.warn(`Cant remove product (id : ${id}) as its not in`)
         }
         setItems(newItem)
+    }
+
+    const removeOne =()=>{
+        const index = items.findIndex((item) => item.id == id)
+        if (index >= 0) {
+            let newItems = [...items];
+            let obj = {...newItems[index]};
+            if(obj.quantity==0) return;
+            obj.quantity--;
+            newItems[index] = obj
+            setItems(newItems);
+        }
+        else {
+            setItems([...items, {
+                id, title, price, description, category, image, rat, hasPrime, quantity:1
+            }])
+        }
     }
 
     return (
@@ -66,7 +88,11 @@ const BasketItem = ({id, title, price, description, category, image, rat,hasPrim
             {/* right Add/Remove buttons */}
 
             <div className="flex flex-col space-y-2 justify-self-end">
-                <button className="btn" onClick={addItem}>Add to Basket</button>
+                <biv className='flex justify-between items-center font-bold '>
+                    <button onClick={removeOne} className="btn px-4 ">-</button>
+                    <p>{qty}</p>
+                    <button onClick={addItem} className="btn px-4">+</button>
+                </biv>
                 <button className="btn" onClick={removeItem}>Remove from Basket</button>
             </div>
         </div>

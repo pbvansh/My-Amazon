@@ -16,17 +16,27 @@ const Product = ({ id, title, price, description, category, image, rating }) => 
         Math.floor(Math.random() * (MAX_RAT - MIN_RAT + 1) + MIN_RAT)
     )
     const [hasPrime] = useState(Math.random() > 0.5);
-    const [items,setItems] = useRecoilState(basketItemAtom)
+    const [items, setItems] = useRecoilState(basketItemAtom)
 
-    function incCount(){
-        setItems([...items,{
-            id, title, price, description, category, image,rat,hasPrime
-        }])
+    function addToBasket() {
+        const index = items.findIndex((item) => item.id == id)
+        if (index >= 0) {
+            let newItems = [...items];
+            let obj = {...newItems[index]};
+            obj.quantity++;
+            newItems[index] = obj
+            setItems(newItems);
+        }
+        else {
+            setItems([...items, {
+                id, title, price, description, category, image, rat, hasPrime, quantity:1
+            }])
+        }
     }
 
     return (
         <div key={id} className="relative flex flex-col p-10 bg-white m-5 z-20">
-            
+
             <p className="absolute top-2 right-2 text-gray-400 text-xs italic">{category}</p>
             <Image
                 src={image}
@@ -55,7 +65,7 @@ const Product = ({ id, title, price, description, category, image, rating }) => 
                 )
             }
 
-            <button onClick={incCount} className="btn">Add to Basket</button>
+            <button onClick={addToBasket} className="btn">Add to Basket</button>
         </div>
     )
 }
