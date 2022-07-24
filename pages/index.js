@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Banner from '../components/Banner'
 import Header from '../components/Header'
-import ProductsFeed from '../components/productsFeed'
+import ProductsFeed from '../components/ProductsFeed'
 import dynamic from 'next/dynamic'
 
 export default function Home({products}) {
